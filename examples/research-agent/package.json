@@ -1,0 +1,26 @@
+{
+  "name": "@verid/example-research-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ResearchBot: the canonical VERID demonstration (full evidence -> validation -> receipt -> anchor lifecycle).",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "demo": "tsx src/run.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@verid/arc": "workspace:*",
+    "@verid/core": "workspace:*",
+    "@verid/validators": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "@verid/cli": "workspace:*",
+    "tsx": "4.19.2",
+    "typescript": "5.5.3",
+    "vitest": "2.1.4",
+    "viem": "2.21.54"
+  }
+}

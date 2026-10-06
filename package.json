@@ -1,0 +1,30 @@
+{
+  "name": "verid-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "VERID \u2014 execution evidence infrastructure for autonomous AI agents.",
+  "license": "MIT",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @verid/web dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "dev:chain": "pnpm --filter @verid/arc dev:chain",
+    "dev:fund-escrow": "pnpm --filter @verid/arc dev:fund-escrow",
+    "arc:keys": "pnpm --filter @verid/arc arc:keys",
+    "arc:doctor": "pnpm --filter @verid/arc arc:doctor",
+    "arc:configure": "pnpm --filter @verid/arc arc:configure",
+    "arc:smoke": "pnpm --filter @verid/arc arc:smoke",
+    "arc:deploy-plan": "pnpm --filter @verid/arc arc:deploy-plan",
+    "predeploy": "pnpm --filter @verid/arc predeploy",
+    "scan:secrets": "node scripts/scan-secrets.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.5.3",
+    "vitest": "2.1.4"
+  }
+}

@@ -1,0 +1,57 @@
+# Render blueprint for the Verid web app (dashboard + API + docs in one Next.js service).
+# Render: New -> Blueprint -> pick this repository. Secrets are entered in Render's dashboard (sync: false); none are in this file.
+# NOT yet run by the Verid project: treat the first deploy as a staging test. Run `pnpm predeploy` with the same values first.
+#
+# Database migrations are NOT run here. Run them from your machine against the same DATABASE_URL, before the first deploy
+# and after any release that adds migrations:   DATABASE_URL=... pnpm --filter @verid/server db:migrate
+services:
+  - type: web
+    name: verid
+    runtime: node
+    plan: starter            # "free" sleeps when idle and cold-starts slowly; fine for a first look, not for real users
+    region: ohio             # near the Neon database (us-east-2); change both together
+    autoDeploy: false
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @verid/web build
+    startCommand: pnpm --filter @verid/web start
+    healthCheckPath: /api/v1/network/status
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: NODE_ENV
+        value: production
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NEXTAUTH_URL           # https://<your service or domain>, no trailing slash
+        sync: false
+      - key: APP_URL                # same value as NEXTAUTH_URL
+        sync: false
+      - key: DATABASE_URL           # Neon connection string
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM            # a sender on a domain verified in Resend
+        sync: false
+      - key: GOOGLE_CLIENT_ID       # optional; add <NEXTAUTH_URL>/api/auth/callback/google in Google Cloud
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: ARC_RPC_URL
+        sync: false
+      - key: ARC_CHAIN_ID
+        sync: false
+      - key: ARC_NETWORK_NAME
+        sync: false
+      - key: VERID_REGISTRY_ADDRESS
+        sync: false
+      - key: VERID_VALIDATION_ADDRESS
+        sync: false
+      - key: VERID_ESCROW_ADDRESS
+        sync: false
+      - key: VERID_RELAYER_PRIVATE_KEY
+        sync: false
+      - key: VERID_VALIDATOR_PRIVATE_KEY
+        sync: false
+      - key: VERID_CONFIRMATION_TIMEOUT_MS
+        value: 20000
+      - key: NEXT_PUBLIC_ARC_EXPLORER_URL
+        sync: false

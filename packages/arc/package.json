@@ -1,0 +1,43 @@
+{
+  "name": "@verid/arc",
+  "version": "0.1.0",
+  "description": "VERID Arc adapter: chain reader, idempotent anchoring, and network configuration.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./abi-settlement": {
+      "types": "./src/abi-settlement.ts",
+      "import": "./src/abi-settlement.ts"
+    }
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "dev:chain": "tsx scripts/dev-chain.ts",
+    "dev:fund-escrow": "tsx scripts/dev-fund-escrow.ts",
+    "arc:keys": "tsx scripts/arc-keys.ts",
+    "arc:doctor": "tsx scripts/arc-doctor.ts",
+    "arc:configure": "tsx scripts/arc-configure.ts",
+    "arc:smoke": "tsx scripts/arc-smoke.ts",
+    "arc:deploy-plan": "tsx scripts/arc-deploy-plan.ts",
+    "predeploy": "tsx scripts/predeploy-check.ts"
+  },
+  "dependencies": {
+    "@verid/core": "workspace:*",
+    "viem": "2.21.54",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "typescript": "5.5.3",
+    "vitest": "2.1.4",
+    "tsx": "4.19.2"
+  }
+}

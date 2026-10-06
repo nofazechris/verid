@@ -1,0 +1,23 @@
+[profile.default]
+src = "src"
+test = "test"
+script = "script"
+out = "out"
+libs = ["lib"]
+solc_version = "0.8.24"
+# Conservative target: no PUSH0 / MCOPY / transient storage. Re-evaluate once the
+# EVM versions supported by Arc Mainnet are confirmed from its official docs.
+evm_version = "paris"
+optimizer = true
+optimizer_runs = 200
+remappings = [
+  "@openzeppelin/=lib/openzeppelin-contracts/",
+  "forge-std/=lib/forge-std/src/",
+]
+
+[fuzz]
+runs = 512
+
+[invariant]
+runs = 128
+depth = 32

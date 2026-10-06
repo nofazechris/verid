@@ -1,0 +1,12 @@
+{
+  "name": "verid-research-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A real research agent (Wikipedia + Hacker News + optional Claude), recorded and validated by Verid. Deployable as a small web service.",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server.mjs",
+    "once": "node server.mjs --once"
+  }
+}
