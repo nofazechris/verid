@@ -65,19 +65,18 @@ const RULES = [
   { type: "evidence", types: ["task", "tool_call", "tool_result", "result"] },
 ];
 
+// "ensure" makes the server's validator match the rules in THIS file: it creates version 1 the first time, does nothing
+// while the rules are unchanged, and creates version N+1 when you edit RULES above and run again.
 async function ensureValidator() {
-  try {
-    await verid("POST", "/validators", {
-      slug: VALIDATOR_ID,
-      name: "GitHub repository list checker",
-      description: "A list of repositories, each with a name, URL, star count and creation date, with no duplicates.",
-      rules: RULES,
-    });
-    log(`   created validator custom:${VALIDATOR_ID} (version 1)`);
-  } catch (e) {
-    if (e.status !== 409) throw e;
-    log(`   validator custom:${VALIDATOR_ID} already exists, reusing it`);
-  }
+  const { validator, action } = await verid("POST", "/validators/ensure", {
+    slug: VALIDATOR_ID,
+    name: "GitHub repository list checker",
+    description: "A list of repositories, each with a name, URL, star count and creation date, with no duplicates.",
+    rules: RULES,
+  });
+  const what = { created: "created", unchanged: "rules unchanged, reusing", versioned: "rules changed, created a new version of" }[action];
+  log(`   ${what} validator custom:${VALIDATOR_ID} (version ${validator.version})`);
+  return `custom:${VALIDATOR_ID}@${validator.version}`; // pinned: validate with exactly the rules in this file
 }
 
 // -------------------------------------------------------------------------------------------- 2. the agent record
@@ -101,7 +100,7 @@ async function ensureAgent() {
 // ------------------------------------------------------------------------------------------------------- the run
 async function main() {
   step(1, "Make sure the validator and the agent exist in Verid");
-  await ensureValidator();
+  const validatorId = await ensureValidator();
   const agent = await ensureAgent();
   log(`   agent ${agent.name} (${agent.id})`);
 
@@ -153,7 +152,7 @@ async function main() {
 
   step(4, "Hand Verid the result and let it validate");
   await verid("POST", `/executions/${execution.id}/complete`, { result }, `${run}-done`);
-  const { validation, executionStatus } = await verid("POST", "/validations", { executionId: execution.id, validatorId: `custom:${VALIDATOR_ID}` }, `${run}-validate`);
+  const { validation, executionStatus } = await verid("POST", "/validations", { executionId: execution.id, validatorId }, `${run}-validate`);
   log(`   outcome: ${validation.status.toUpperCase()}  (validator ${validation.validatorId} @ ${validation.validatorVersion})`);
   for (const c of validation.checks) log(`   ${c.determinate ? (c.ok ? "✓" : "✕") : "·"} ${c.description}${c.ok ? "" : `\n       ${c.explanation}`}`);
 

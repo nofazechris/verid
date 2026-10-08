@@ -150,14 +150,18 @@ export class Verid {
     list: async (): Promise<ValidatorInfo[]> => (await this.request<{ data: ValidatorInfo[] }>("GET", "/validators")).data,
     /** Create a rule-based validator (version 1). Use it as `custom:<slug>`. */
     create: async (v: ValidatorDefinition): Promise<ValidatorInfo> => (await this.request<{ validator: ValidatorInfo }>("POST", "/validators", v)).validator,
-    /** Create the validator if it does not exist yet; reuse it if it does. Does NOT change existing rules. */
+    /**
+     * Make the server's validator match the rules in your code. Safe to call on every start-up or run:
+     *  - new slug                      -> creates version 1
+     *  - these exact rules already exist -> creates nothing
+     *  - you changed the rules         -> creates version N+1
+     * Returns the id to validate with, pinned to the matching version (`custom:<slug>@<n>`), so a deployment that is
+     * still running older rules keeps using them instead of flipping the validator back. Only the rules count: a
+     * new name or description does not create a version. Earlier versions, and every verdict they produced, never change.
+     */
     ensure: async (v: ValidatorDefinition): Promise<string> => {
-      try {
-        await this.validators.create(v);
-      } catch (e) {
-        if (!(e instanceof VeridError) || e.status !== 409) throw e;
-      }
-      return `custom:${v.slug}`;
+      const { validator } = await this.request<{ validator: ValidatorInfo; action: "created" | "unchanged" | "versioned" }>("POST", "/validators/ensure", v);
+      return `custom:${v.slug}@${validator.version}`;
     },
     /** Create version N+1 (earlier versions never change). */
     update: async (slug: string, patch: { name?: string; description?: string; rules?: unknown[] }): Promise<ValidatorInfo> =>

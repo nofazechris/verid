@@ -264,13 +264,14 @@ class _Validators:
         return self._v.request("POST", "/validators", {"slug": slug, "name": name, "description": description, "rules": rules})["validator"]
 
     def ensure(self, slug: str, name: str, rules: List[Any], description: str = "") -> str:
-        """Create the validator if missing; reuse it if it exists (existing rules are NOT changed)."""
-        try:
-            self.create(slug, name, rules, description)
-        except VeridError as e:
-            if e.status != 409:
-                raise
-        return f"custom:{slug}"
+        """Make the server's validator match the rules in your code. Safe to call on every run.
+
+        New slug -> creates version 1. These exact rules already exist -> creates nothing. You changed the rules ->
+        creates version N+1. Returns the id to validate with, pinned to the matching version ("custom:<slug>@<n>"), so a
+        deployment still running older rules keeps using them. Only the rules count: renaming does not create a version.
+        """
+        r = self._v.request("POST", "/validators/ensure", {"slug": slug, "name": name, "description": description, "rules": rules})
+        return f"custom:{slug}@{r['validator']['version']}"
 
     def update(self, slug: str, **patch: Any) -> Dict[str, Any]:
         return self._v.request("PATCH", f"/validators/{slug}", patch)["validator"]

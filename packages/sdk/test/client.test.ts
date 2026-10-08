@@ -90,13 +90,19 @@ describe("helpers", () => {
     expect((await v.agents.ensure({ slug: "bot" })).id).toBe("agt_9");
   });
 
-  it("validators.ensure creates once and treats 'already exists' as success", async () => {
-    const created = client([json(201, { validator: { id: "custom:x" } })]);
-    expect(await created.v.validators.ensure({ slug: "x", name: "X", rules: [] })).toBe("custom:x");
-    const existing = client([json(409, { error: { code: "conflict", message: "exists" } })]);
-    expect(await existing.v.validators.ensure({ slug: "x", name: "X", rules: [] })).toBe("custom:x");
+  it("validators.ensure asks the server to reconcile the rules and pins the matching version", async () => {
+    const def = { slug: "x", name: "X", rules: [{ type: "unique", path: "$" }] };
+    const created = client([json(200, { action: "created", validator: { id: "custom:x", version: 1 } })]);
+    expect(await created.v.validators.ensure(def)).toBe("custom:x@1");
+    expect(created.calls[0]!.url).toMatch(/\/validators\/ensure$/);
+    expect(created.calls[0]!.init.method).toBe("POST");
+    expect(JSON.parse(created.calls[0]!.init.body as string)).toEqual(def); // the rules in code are what is sent
+
+    const versioned = client([json(200, { action: "versioned", validator: { id: "custom:x", version: 3 } })]);
+    expect(await versioned.v.validators.ensure(def)).toBe("custom:x@3");
+
     const broken = client([json(400, { error: { code: "invalid_request", message: "bad rules" } })]);
-    await expect(broken.v.validators.ensure({ slug: "x", name: "X", rules: [] })).rejects.toMatchObject({ code: "invalid_request" });
+    await expect(broken.v.validators.ensure(def)).rejects.toMatchObject({ code: "invalid_request" });
   });
 
   it("receipts.anchor distinguishes confirmed from pending (202)", async () => {

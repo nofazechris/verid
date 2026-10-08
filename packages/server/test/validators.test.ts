@@ -133,3 +133,52 @@ describe("dry-run testing", () => {
     expect((await call("POST", "/validators/test", { ...me, body: { rules: [{ type: "nope" }], result: [] } })).status).toBe(400);
   });
 });
+
+describe("ensure: the rules in your code are the rules that run", () => {
+  const ensure = (slug: string, rules: unknown[], extra: object = {}, as: object = me) =>
+    call("POST", "/validators/ensure", { ...as, body: { slug, name: `Ensured ${slug}`, rules, ...extra } });
+  const R1 = [{ type: "items", path: "$", min: 1 }];
+  const R2 = [{ type: "items", path: "$", min: 2 }];
+
+  it("creates v1, then reuses it, then versions only when the rules actually change", async () => {
+    const a = await ensure("ens-list", R1);
+    expect([a.status, a.json.action, a.json.validator.version]).toEqual([200, "created", 1]);
+
+    const same = await ensure("ens-list", R1);
+    expect([same.json.action, same.json.validator.version]).toEqual(["unchanged", 1]);
+    expect(same.json.validator.definitionHash).toBe(a.json.validator.definitionHash);
+
+    // a different name/description is NOT a new version: only the rules define identity
+    const renamed = await ensure("ens-list", R1, { name: "A new display name", description: "changed" });
+    expect([renamed.json.action, renamed.json.validator.version]).toEqual(["unchanged", 1]);
+
+    const changed = await ensure("ens-list", R2);
+    expect([changed.json.action, changed.json.validator.version]).toEqual(["versioned", 2]);
+    expect(changed.json.validator.definitionHash).not.toBe(a.json.validator.definitionHash);
+  });
+
+  it("pins to the version whose rules match, so an old deployment cannot flip the validator back", async () => {
+    // v1 = R1, v2 = R2 from the previous test. An old instance (still on R1) asks again:
+    const old = await ensure("ens-list", R1);
+    expect([old.json.action, old.json.validator.version]).toEqual(["unchanged", 1]); // NOT a new v3
+    const versions = (await call("GET", "/validators", me)).json.data.find((v: { id: string }) => v.id === "custom:ens-list").versions;
+    expect(versions.map((v: { version: number }) => v.version)).toEqual([2, 1]); // nothing was created
+
+    // and the pinned id validates with the old rules while the latest uses the new ones
+    const id = await runToAwaitingValidation(call, me, agent);
+    const pinned = await validate(id, "custom:ens-list@1");
+    expect(pinned.json.validation.validatorVersion).toMatch(/^1\+/);
+  });
+
+  it("rejects bad rules and viewers, and two simultaneous first calls end with one version", async () => {
+    expect((await ensure("ens-bad", [{ type: "mystery" }])).status).toBe(400);
+    const viewer = (await call("POST", "/api-keys", { ...me, body: { name: "ro-ens", role: "viewer" } })).json.key;
+    expect((await ensure("ens-viewer", R1, {}, { key: viewer })).status).toBe(403);
+
+    const both = await Promise.all([ensure("ens-race", R1), ensure("ens-race", R1)]);
+    expect(both.every((r) => r.status === 200)).toBe(true);
+    expect(both.every((r) => r.json.validator.version === 1)).toBe(true);
+    const versions = (await call("GET", "/validators", me)).json.data.find((v: { id: string }) => v.id === "custom:ens-race").versions;
+    expect(versions).toHaveLength(1);
+  });
+});

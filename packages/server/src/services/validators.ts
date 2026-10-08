@@ -98,6 +98,52 @@ export async function createValidatorVersion(ctx: Ctx, slugParam: string, raw: u
   }
 }
 
+export const ensureValidatorInput = z.object({
+  slug,
+  name: z.string().trim().min(1).max(100),
+  description: z.string().trim().max(500).default(""),
+  rules: z.array(z.unknown()),
+});
+
+/**
+ * "These are the rules my code declares": what the SDK sends on every run, so that pushing new rules just works.
+ *  - no validator with this slug      -> create version 1                         (action "created")
+ *  - some version has exactly these rules -> return THAT version, create nothing   (action "unchanged")
+ *  - otherwise                         -> create version N+1 with these rules      (action "versioned")
+ * Identity is the rules hash only (names and descriptions never create a version). Returning the matching version,
+ * not the latest, means an old deployment that is still running keeps using its old rules instead of flipping the
+ * validator back and forth; callers pin the returned `version` (`custom:<slug>@<version>`).
+ */
+export async function ensureValidator(ctx: Ctx, raw: unknown): Promise<{ validator: ReturnType<typeof view>; action: "created" | "unchanged" | "versioned" }> {
+  requireRole(ctx.principal, "developer");
+  const input = parse(ensureValidatorInput, raw);
+  const { def, hash } = checkedDefinition(input.rules);
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const versions = await ctx.deps.db
+      .select()
+      .from(customValidators)
+      .where(and(eq(customValidators.workspaceId, ctx.principal.workspaceId), eq(customValidators.slug, input.slug)))
+      .orderBy(desc(customValidators.version));
+    const same = versions.find((r) => r.definitionHash === hash);
+    if (same) return { validator: view(same), action: "unchanged" };
+    try {
+      const next = (versions[0]?.version ?? 0) + 1;
+      const row = await ctx.deps.db.transaction(async (tx) => {
+        const [r] = await tx
+          .insert(customValidators)
+          .values({ id: newId("vld"), workspaceId: ctx.principal.workspaceId, slug: input.slug, name: input.name, description: input.description, version: next, definition: def, definitionHash: hash, createdByUserId: ctx.principal.userId ?? null, createdAt: ctx.deps.now() })
+          .returning();
+        await audit(tx, ctx, next === 1 ? "validator.created" : "validator.versioned", { type: "validator", id: CUSTOM_PREFIX + input.slug }, { version: next, definitionHash: hash, via: "ensure" });
+        return r!;
+      });
+      return { validator: view(row), action: next === 1 ? "created" : "versioned" };
+    } catch (e) {
+      if (!isUniqueViolation(e)) throw e; // another instance created a version at the same moment: look again
+    }
+  }
+  throw new ApiError("conflict", "could not settle the validator version after several attempts; try again");
+}
+
 /** Latest version of every workspace validator, each with its version history. */
 export async function listCustomValidators(ctx: Ctx) {
   const rows = await ctx.deps.db

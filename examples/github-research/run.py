@@ -87,13 +87,11 @@ def step(n, msg):
 
 def main():
     step(1, "Make sure the validator and the agent exist in Verid")
-    try:
-        verid("POST", "/validators", {"slug": VALIDATOR_ID, "name": "GitHub repository list checker", "description": "A list of repositories with name, URL, stars and creation date, no duplicates.", "rules": RULES})
-        print(f"   created validator custom:{VALIDATOR_ID} (version 1)")
-    except VeridError as e:
-        if e.status != 409:
-            raise
-        print(f"   validator custom:{VALIDATOR_ID} already exists, reusing it")
+    # "ensure" makes the server's validator match the RULES in this file: version 1 the first time, nothing while the
+    # rules are unchanged, version N+1 when you edit RULES and run again.
+    r = verid("POST", "/validators/ensure", {"slug": VALIDATOR_ID, "name": "GitHub repository list checker", "description": "A list of repositories with name, URL, stars and creation date, no duplicates.", "rules": RULES})
+    validator_id = f"custom:{VALIDATOR_ID}@{r['validator']['version']}"  # pinned: validate with exactly these rules
+    print(f"   validator {validator_id} ({r['action']})")
     try:
         agent = verid("POST", "/agents", {"slug": "github-researcher", "name": "GitHub Researcher", "version": "1.0.0", "capabilities": ["http.fetch", "github.search"], "description": "Finds popular GitHub repositories for a topic."})["agent"]
     except VeridError as e:
@@ -135,7 +133,7 @@ def main():
 
     step(4, "Hand Verid the result and let it validate")
     verid("POST", f"/executions/{ex['id']}/complete", {"result": result}, f"{run}-done")
-    v = verid("POST", "/validations", {"executionId": ex["id"], "validatorId": f"custom:{VALIDATOR_ID}"}, f"{run}-validate")
+    v = verid("POST", "/validations", {"executionId": ex["id"], "validatorId": validator_id}, f"{run}-validate")
     val = v["validation"]
     print(f"   outcome: {val['status'].upper()}  (validator {val['validatorId']} @ {val['validatorVersion']})")
     for c in val["checks"]:

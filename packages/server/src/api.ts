@@ -1,4 +1,4 @@
-import { createValidator, createValidatorVersion, listCustomValidators, testValidator } from "./services/validators";
+import { createValidator, createValidatorVersion, ensureValidator, listCustomValidators, testValidator } from "./services/validators";
 import { getSettlement, listSettlements, registerSettlement, settle } from "./services/settlements";
 import { randomUUID } from "node:crypto";
 import { authenticate, authenticateUser, clientIp } from "./auth";
@@ -96,6 +96,7 @@ add("GET", "/validators", async ({ ctx }) => {
   return ok({ data: await Promise.all(all.map(async (v) => ({ ...v, outcomes: await validatorHistory(ctx, v.id) }))) });
 });
 add("POST", "/validators", async ({ ctx, body }) => ok({ validator: await createValidator(ctx, await body()) }, 201));
+add("POST", "/validators/ensure", async ({ ctx, body }) => ok(await ensureValidator(ctx, await body())));
 add("POST", "/validators/test", async ({ ctx, body }) => ok(await testValidator(ctx, await body())));
 add("PATCH", "/validators/:slug", async ({ ctx, params, body }) => ok({ validator: await createValidatorVersion(ctx, params.slug!, await body()) }, 201));
 add("POST", "/receipts", async ({ ctx, body }) => createReceipt(ctx, await body()));

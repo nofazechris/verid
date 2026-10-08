@@ -16,7 +16,7 @@ const out = await verid.run(
   {
     agent: "my-agent",                                   // created on first use
     task: { description: "Find 5 AI startups", parameters: { minimumResults: 5 } },
-    validator: {                                         // rules as data; created on first use
+    validator: {                                         // rules as data; a new version is made when you change them
       slug: "startup-list",
       name: "Startup list",
       rules: [

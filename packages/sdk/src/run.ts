@@ -9,7 +9,8 @@ export interface RunOptions {
   task: Task;
   /**
    * What decides pass/fail: a validator id (`research-validator`, `custom:my-checker`, `custom:my-checker@2`),
-   * or a definition with rules that is created the first time and reused afterwards.
+   * or a definition with rules. A definition is kept in sync with your code: created the first time, reused while the
+   * rules are unchanged, and given a new version when you change them (see `verid.validators.ensure`).
    */
   validator: string | ValidatorDefinition;
   /** Anchor a passing receipt on Arc. Default true. A server without a chain configured just skips it. */
