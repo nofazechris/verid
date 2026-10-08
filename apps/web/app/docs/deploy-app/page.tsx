@@ -63,6 +63,27 @@ pnpm --filter @verid/web start        # serves on $PORT (default 3000); put it b
         <li><b>Verify independently</b>: export the receipt and bundle and run the CLI against Arc’s RPC from a different machine.</li>
       </OL>
 
+      <H3>Hosting on Railway</H3>
+      <P>
+        The repository contains a <Code>Dockerfile</Code> and a <Code>railway.json</Code>. Railway finds the Dockerfile by itself, so there is nothing to configure for the build. The Dockerfile installs with the lockfile, builds only the web app, and starts it; it never contains a secret.
+      </P>
+      <OL>
+        <li>In Railway choose <b>New project, Deploy from GitHub repo</b> and pick the repository. Leave the root directory alone.</li>
+        <li>
+          Open the service&rsquo;s <b>Variables</b> tab and add everything from step 2 before the first build finishes, in particular <Code>DATABASE_URL</Code>, <Code>NEXTAUTH_SECRET</Code> (a fresh random value, at least 32 characters) and the Arc and Resend values. Type secrets into Railway yourself; do not commit them.
+        </li>
+        <li>
+          <Code>NEXT_PUBLIC_ARC_EXPLORER_URL</Code> is the one value compiled into the page code, so it must be set <b>before</b> a build (it is not a secret). If you add or change it later, redeploy.
+        </li>
+        <li>Under <b>Settings, Networking</b> choose <b>Generate domain</b>. Copy the URL (https, no trailing slash) and set <Code>NEXTAUTH_URL</Code> and <Code>APP_URL</Code> to it, then redeploy.</li>
+        <li>In Google Cloud add <Code>YOUR-URL/api/auth/callback/google</Code> as an authorized redirect URI, or &ldquo;Continue with Google&rdquo; will fail.</li>
+        <li>Run the database migrations from your own machine (Railway does not run them): <Code>DATABASE_URL=… pnpm --filter @verid/server db:migrate</Code>.</li>
+        <li>Under <b>Settings, Billing</b> set a usage limit, because Railway bills what you use.</li>
+      </OL>
+      <P>
+        Railway&rsquo;s health check calls <Code>/api/v1/network/status</Code>. Verid&rsquo;s slowest request is waiting for an Arc confirmation (up to about 20 seconds), which is well inside Railway&rsquo;s request time limit. The service does not sleep when idle unless you turn sleeping on.
+      </P>
+
       <H2>4. Before real users</H2>
       <Table
         head={["CHECK", "WHY"]}

@@ -1,0 +1,20 @@
+# Keeps secrets and bulk out of the build context (and so out of the image).
+.git
+**/node_modules
+**/.next
+**/dist
+**/.data
+.arc-secrets
+.claude
+.env
+**/.env
+**/.env.*
+!**/.env.example
+contracts/lib
+contracts/out
+contracts/cache
+contracts/broadcast
+apps/web/public/sdk
+apps/web/public/examples
+**/*.tgz
+**/*.log
