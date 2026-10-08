@@ -1,38 +1,15 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { s } from "@/lib/style";
 import { A, Btn } from "@/components/ui";
 import ConnectAgent from "@/components/ConnectAgent";
-import { Card, ErrorBox, Label, Loading, Mono, Page, PageTitle, Spinner, ghostBtn, ghostHover, MONO } from "@/components/kit";
+import FlowDiagram from "@/components/FlowDiagram";
+import Tour, { tourSeen } from "@/components/Tour";
+import { Card, ErrorBox, Label, Loading, Mono, Page, PageTitle, Spinner, ghostBtn, ghostHover, primaryBtn, primaryHover, MONO } from "@/components/kit";
 import { ago, executionBadge, short } from "@/lib/client/format";
 import { useSession } from "@/lib/client/session";
 import { useApi } from "@/lib/client/useApi";
-
-/** The one picture that explains the product. */
-function Flow() {
-  const box = (x: number, w: number, title: string, sub: string, accent = false) => (
-    <g key={title}>
-      <rect x={x} y={14} width={w} height={74} rx={10} fill={accent ? "#0F1512" : "#101311"} stroke={accent ? "#2C8A66" : "#252B27"} />
-      <text x={x + w / 2} y={44} textAnchor="middle" fontSize="13" fontWeight="500" fill="#E8ECE9" fontFamily="Geist, sans-serif">{title}</text>
-      <text x={x + w / 2} y={64} textAnchor="middle" fontSize="10.5" fill="#7C847F" fontFamily="'Geist Mono',monospace">{sub}</text>
-    </g>
-  );
-  const arrow = (x: number) => <path key={x} d={`M${x} 51 h18 m-6 -5 l6 5 l-6 5`} stroke="#3A443D" fill="none" strokeWidth="1.5" />;
-  return (
-    <svg viewBox="0 0 760 108" width="100%" role="img" aria-label="Your agent reports to Verid, which validates the result and anchors a receipt on Arc, producing a proof link" style={{ display: "block", minWidth: 560 }}>
-      {box(0, 150, "Your agent", "any code, any model")}
-      {arrow(152)}
-      {box(172, 150, "Verid SDK", "records each step")}
-      {arrow(324)}
-      {box(344, 170, "Verid server", "validates the result", true)}
-      {arrow(516)}
-      {box(536, 108, "Arc chain", "fingerprint only")}
-      {arrow(646)}
-      {box(666, 94, "Proof link", "shareable")}
-    </svg>
-  );
-}
 
 function Step({ n, title, done, current, optional, children, summary }: { n: number; title: string; done: boolean; current: boolean; optional?: boolean; children: ReactNode; summary?: ReactNode }) {
   const [open, setOpen] = useState<boolean | null>(null);
@@ -64,6 +41,12 @@ export default function GetStarted() {
   const { toast } = useSession();
   const ob = useApi<any>("/onboarding", { pollMs: 4000 });
   const [path, setPath] = useState<"research" | "own">("research");
+  const [tour, setTour] = useState(false);
+  const firstRun = ob.data ? ob.data.executions === 0 : undefined;
+  useEffect(() => {
+    // Open by itself once, for someone with no runs yet; always available from the button, and via ?tour=1.
+    if (new URLSearchParams(window.location.search).get("tour") === "1" || (firstRun === true && !tourSeen())) setTour(true);
+  }, [firstRun]);
   const origin = typeof window !== "undefined" ? window.location.origin : "https://your-verid-host";
 
   if (ob.loading && !ob.data) return <Page><PageTitle title="Get started" /><Loading /></Page>;
@@ -91,6 +74,7 @@ VERID_URL=${origin} VERID_API_KEY=<your key> node server.mjs --once "solid state
 
   return (
     <Page>
+      {tour && <Tour onClose={() => setTour(false)} />}
       <PageTitle title="Get started" sub="From zero to a real agent reporting to Verid, with a proof link you can send to someone. Each step ticks itself when it actually happens." />
 
       <Card pad={22} gap={12}>
@@ -102,7 +86,11 @@ VERID_URL=${origin} VERID_API_KEY=<your key> node server.mjs --once "solid state
         {doneCount === 4 && <span style={s("font-size:13.5px;color:#4ADE80")}>You have a real, validated run{d.anchored > 0 ? " anchored on Arc" : ""}. The steps below are for going further.</span>}
       </Card>
 
-      <div style={{ overflowX: "auto" }}><Flow /></div>
+      <div style={{ overflowX: "auto" }}><FlowDiagram loop /></div>
+      <div style={s("display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap")}>
+        <Btn onClick={() => setTour(true)} css={`${primaryBtn};height:40px;padding:0 20px`} hover={primaryHover}>Take the guided tour</Btn>
+        <span style={s("font-size:12.5px;color:#7C847F")}>About two minutes. Runs a real agent and shows you the proof.</span>
+      </div>
 
       <Card gap={14} pad={22}>
         <Label>THE THREE WORDS YOU WILL SEE</Label>

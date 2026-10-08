@@ -24,7 +24,7 @@ export default function GetStarted() {
       <div style={s("display:flex;flex-direction:column;gap:6px;max-width:760px")}>
         <span style={s("font-size:18px;font-weight:500")}>Connect your first agent</span>
         <span style={s("font-size:13.5px;color:#9BA39E;line-height:1.6")}>
-          Verid records what your software does, checks the result against rules on its own server, and publishes a verifiable receipt on Arc. Nothing shows up here until a real agent reports in. The walkthrough takes about five minutes and ends with a proof link you can send to someone.
+          Verid records what your software does, checks the result against rules on its own server, and publishes a verifiable receipt on Arc. Nothing shows up here until a real agent reports in. The guided tour takes about two minutes: it runs a real sample agent and ends with a proof link you can send to someone.
         </span>
       </div>
 
@@ -39,7 +39,7 @@ export default function GetStarted() {
       </div>
 
       <div style={s("display:flex;gap:10px;flex-wrap:wrap;align-items:center")}>
-        <A href="/get-started" css="display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:9px;background:#E8ECE9;color:#0B0D0C;font-size:14px;font-weight:500" hover="background:#FFFFFF;color:#0B0D0C">Open the walkthrough</A>
+        <A href="/get-started?tour=1" css="display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:9px;background:#E8ECE9;color:#0B0D0C;font-size:14px;font-weight:500" hover="background:#FFFFFF;color:#0B0D0C">Take the guided tour</A>
         <A href="/agents" css="display:inline-flex;align-items:center;height:40px;padding:0 16px;border-radius:9px;border:1px solid #303832;color:#E8ECE9;font-size:14px" hover="background:#151917;color:#E8ECE9">Add an agent</A>
         <span style={s("font-size:12.5px;color:#7C847F")}>Prefer to read first? <A href="/docs/overview" css="color:#4ADE80">What is Verid?</A> · <A href="/docs/examples" css="color:#4ADE80">Examples</A> · <Mono size={12}>SDK</Mono> <A href="/docs/sdk" css="color:#4ADE80">docs</A></span>
       </div>

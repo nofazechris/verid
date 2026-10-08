@@ -47,3 +47,10 @@ input::placeholder,textarea::placeholder{color:#6B736E}
 }
 @media (max-width:560px){.vd-hide-sm{display:none!important}}
 @media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@keyframes vdFlow{to{stroke-dashoffset:-14}}
+@keyframes vdGlow{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes vdRise{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes vdFade{from{opacity:0}to{opacity:1}}
+.vd-flow-line{stroke-dasharray:5 9;animation:vdFlow .7s linear infinite}
+.vd-glow{animation:vdGlow 1.4s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.vd-flow-line,.vd-glow{animation:none}}

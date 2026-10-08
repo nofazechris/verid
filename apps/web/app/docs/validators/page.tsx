@@ -99,6 +99,14 @@ export default function Validators() {
         The editor has a test panel, and <Code>POST /validators/test</Code> does the same over the API: send the rules, a sample result, optional evidence types and task parameters, and get back the status and every check with exactly which values failed (for example <Code>$[1].website</Code>). Nothing is stored.
       </P>
 
+      <H3>Changing rules in your code</H3>
+      <P>
+        With the SDK you do not manage versions by hand. Every <Code>verid.run</Code> (or <Code>verid.validators.ensure</Code>) sends the rules in your code and the server reconciles them: a new slug creates version 1; rules that are identical to an existing version create nothing; changed rules create version N+1. Only the rules count, so renaming a validator never creates a version. Over HTTP the same thing is <Code>POST /validators/ensure</Code>, which answers with the version that matches and what it did (<Code>created</Code>, <Code>unchanged</Code> or <Code>versioned</Code>).
+      </P>
+      <P>
+        The SDK then validates with the exact version it got back (<Code>custom:startup-list@3</Code>), not &ldquo;latest&rdquo;. That is deliberate: during a rollout, or if you roll back, an older deployment still running the old rules keeps being judged by the old rules instead of flipping the validator back and forth.
+      </P>
+
       <H3>Versions never change</H3>
       <P>
         Editing (<Code>PATCH /validators/:id</Code>) creates version N+1; earlier versions are untouched. Each validation records the validator ID and a version label such as <Code>3+2d9d6371b0a7</Code>, where the suffix is the start of the rules’ hash, so a receipt pins exactly which rules produced it. Use <Code>custom:startup-list</Code> for the latest version, or <Code>custom:startup-list@2</Code> to pin one.

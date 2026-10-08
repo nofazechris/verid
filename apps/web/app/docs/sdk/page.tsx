@@ -16,7 +16,7 @@ const out = await verid.run(
   {
     agent: "research-agent",                        // created on first use
     task: { description: "Research solid state batteries", parameters: { minimumFindings: 3 } },
-    validator: {                                    // rules as data, created on first use
+    validator: {                                    // rules as data; new version if you change them
       slug: "research-brief",
       name: "Cited research brief",
       rules: [

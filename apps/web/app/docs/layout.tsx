@@ -9,7 +9,7 @@ import { useSession } from "@/lib/client/session";
 
 const NAV: { title: string; items: [string, string][] }[] = [
   { title: "OVERVIEW", items: [["What is Verid?", "/docs/overview"], ["Trust model", "/docs/trust-model"]] },
-  { title: "GET STARTED", items: [["Quickstart", "/docs"], ["Examples", "/docs/examples"], ["Connect your agent", "/docs/integrate"], ["Authentication", "/docs/authentication"], ["SDK", "/docs/sdk"]] },
+  { title: "GET STARTED", items: [["Quickstart", "/docs"], ["Build, ship & run an agent", "/docs/build-and-ship"], ["Examples", "/docs/examples"], ["Connect your agent", "/docs/integrate"], ["Authentication", "/docs/authentication"], ["SDK", "/docs/sdk"]] },
   { title: "GUIDES", items: [["Agents & monitoring", "/docs/agents"], ["Validators", "/docs/validators"], ["Settlement & escrow", "/docs/escrow"], ["Deploy to Arc", "/docs/deploy-arc"], ["Host Verid (go live)", "/docs/deploy-app"], ["Receipts & verification", "/docs/verification"], ["Command-line tool", "/docs/cli"]] },
   { title: "REFERENCE", items: [["REST API", "/docs/api"], ["Commitments & hashing", "/docs/commitments"], ["Self-hosting & configuration", "/docs/self-hosting"]] },
 ];
