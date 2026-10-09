@@ -1,7 +1,8 @@
 "use client";
 
 import { s } from "@/lib/style";
-import { Card, ErrorBox, KV, Label, Loading, Mono } from "@/components/kit";
+import { Btn } from "@/components/ui";
+import { Card, ErrorBox, KV, Label, Loading, Mono, MONO, ghostBtn } from "@/components/kit";
 import { fmtDateTime } from "@/lib/client/format";
 import { useSession } from "@/lib/client/session";
 import { useApi } from "@/lib/client/useApi";
@@ -29,8 +30,14 @@ export default function General() {
         />
       </Card>
       <Card pad={0}>
-        <div style={s("padding:16px 22px;border-bottom:1px solid #1D221F")}>
+        <div style={s("padding:16px 22px;border-bottom:1px solid #1D221F;display:flex;align-items:center;gap:12px;flex-wrap:wrap")}>
           <Label>MEMBERS</Label>
+          <span style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 10 }}>
+            <span style={s(`font-family:${MONO};font-size:10.5px;letter-spacing:0.08em;padding:3px 8px;border-radius:5px;border:1px solid #3A443D;color:#CDB274`)}>COMING SOON</span>
+            <span title="Team invites are coming soon">
+              <Btn disabled css={`${ghostBtn};height:32px;opacity:.5;cursor:not-allowed`}>Invite teammate</Btn>
+            </span>
+          </span>
         </div>
         {members.loading ? (
           <Loading />
@@ -47,7 +54,7 @@ export default function General() {
             </div>
           ))
         )}
-        <div style={s("padding:14px 22px;font-size:12.5px;color:#7C847F")}>Inviting teammates is not available yet.</div>
+        <div style={s("padding:14px 22px;font-size:12.5px;color:#7C847F")}>Team invites are coming soon. For now a workspace has the members listed above.</div>
       </Card>
     </div>
   );

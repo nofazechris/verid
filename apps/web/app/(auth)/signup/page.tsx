@@ -98,7 +98,7 @@ export default function Signup() {
           </Btn>
         </div>
       )}
-      <p style={s("margin:0;font-size:12px;line-height:1.6;color:#7C847F;text-wrap:pretty")}>By creating an account, you agree to the <A href="/" css="color:#9BA39E">Terms of Service</A> and <A href="/" css="color:#9BA39E">Privacy Policy</A>.</p>
+      <p style={s("margin:0;font-size:12px;line-height:1.6;color:#7C847F;text-wrap:pretty")}>By creating an account, you agree to the <A href="/terms" css="color:#9BA39E">Terms of Service</A> and <A href="/privacy" css="color:#9BA39E">Privacy Policy</A>.</p>
       <div style={s("padding-top:20px;border-top:1px solid #1D221F;font-size:13.5px;color:#9BA39E")}>
         Already have an account? <A href="/login" css="color:#4ADE80;font-weight:500">Sign in</A>
       </div>

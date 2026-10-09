@@ -154,7 +154,9 @@ export default function Landing() {
             <A href="/proof/verify" css="color:#9BA39E">Verify</A>
             <A href="/login" css="color:#9BA39E">Sign in</A>
             <A href="/signup" css="color:#9BA39E">Sign up</A>
-            <A href="https://github.com" target="_blank" rel="noreferrer" css="color:#9BA39E">GitHub</A>
+            <A href="https://github.com/nofazechris/verid" target="_blank" rel="noreferrer" css="color:#9BA39E">GitHub</A>
+            <A href="/terms" css="color:#9BA39E">Terms</A>
+            <A href="/privacy" css="color:#9BA39E">Privacy</A>
           </nav>
         </div>
       </footer>

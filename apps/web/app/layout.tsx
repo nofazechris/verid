@@ -7,6 +7,17 @@ export const metadata: Metadata = {
   title: "Verid — Make autonomous work verifiable.",
   description:
     "Record agent execution evidence, validate outcomes, and anchor portable proofs on Arc — verifiable independently of any dashboard.",
+  openGraph: {
+    type: "website",
+    siteName: "Verid",
+    title: "Verid — Make autonomous work verifiable.",
+    description: "Record what your AI agents did, check the result with rules, and publish a verifiable receipt on Arc.",
+  },
+  twitter: {
+    card: "summary",
+    title: "Verid — Make autonomous work verifiable.",
+    description: "Record what your AI agents did, check the result with rules, and publish a verifiable receipt on Arc.",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
