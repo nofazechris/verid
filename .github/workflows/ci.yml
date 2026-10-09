@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive # contracts/lib (forge-std, OpenZeppelin)
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm (version comes from package.json "packageManager")
+        run: corepack enable
+
+      - name: Install foundry (the chain tests run a local anvil, which is NOT Arc)
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Secret scan (nothing that looks like a key may be committed)
+        run: pnpm scan:secrets
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit and integration tests
+        run: pnpm test
+
+      - name: Contract tests
+        working-directory: contracts
+        run: forge test
+
+      - name: Production build of the web app (no secrets needed to build)
+        run: pnpm --filter @verid/web build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"

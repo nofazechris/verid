@@ -19,6 +19,8 @@ RUN pnpm install --frozen-lockfile
 # service variables to a Dockerfile build as build arguments, but only the ones declared here.
 ARG NEXT_PUBLIC_ARC_EXPLORER_URL
 ENV NEXT_PUBLIC_ARC_EXPLORER_URL=$NEXT_PUBLIC_ARC_EXPLORER_URL
+ARG NEXT_PUBLIC_CONTACT_EMAIL
+ENV NEXT_PUBLIC_CONTACT_EMAIL=$NEXT_PUBLIC_CONTACT_EMAIL
 
 # No secrets are needed to build; the app only requires them to RUN.
 RUN pnpm --filter @verid/web build

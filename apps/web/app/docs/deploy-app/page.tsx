@@ -73,7 +73,7 @@ pnpm --filter @verid/web start        # serves on $PORT (default 3000); put it b
           Open the service&rsquo;s <b>Variables</b> tab and add everything from step 2 before the first build finishes, in particular <Code>DATABASE_URL</Code>, <Code>NEXTAUTH_SECRET</Code> (a fresh random value, at least 32 characters) and the Arc and Resend values. Type secrets into Railway yourself; do not commit them.
         </li>
         <li>
-          <Code>NEXT_PUBLIC_ARC_EXPLORER_URL</Code> is the one value compiled into the page code, so it must be set <b>before</b> a build (it is not a secret). If you add or change it later, redeploy.
+          <Code>NEXT_PUBLIC_ARC_EXPLORER_URL</Code> and <Code>NEXT_PUBLIC_CONTACT_EMAIL</Code> are compiled into the page code, so set them <b>before</b> a build (neither is a secret). If you add or change them later, redeploy.
         </li>
         <li>Under <b>Settings, Networking</b> choose <b>Generate domain</b>. Copy the URL (https, no trailing slash) and set <Code>NEXTAUTH_URL</Code> and <Code>APP_URL</Code> to it, then redeploy.</li>
         <li>In Google Cloud add <Code>YOUR-URL/api/auth/callback/google</Code> as an authorized redirect URI, or &ldquo;Continue with Google&rdquo; will fail.</li>
@@ -96,7 +96,7 @@ pnpm --filter @verid/web start        # serves on $PORT (default 3000); put it b
           ["Relayer and validator wallets funded, with an alert", "Anchoring and settlement stop if they run out of USDC for gas. Check their balances (pnpm arc:doctor) and set a low-balance alert."],
           ["Backups", "Turn on point-in-time recovery for the database (Neon has it)."],
           ["Mainnet only after testnet is proven", "Repeat the Arc deploy with a multisig owner and your explicit sign-off. Nothing here has been run on Mainnet."],
-          ["Terms and privacy pages", "The sign-up page links to placeholders. Replace them before you take real sign-ups."],
+          ["Terms and privacy pages", <>Included at <Code key="a">/terms</Code> and <Code key="b">/privacy</Code>. They are a plain-language starting point, not legal advice: have them reviewed for your jurisdiction and set <Code key="c">NEXT_PUBLIC_CONTACT_EMAIL</Code> (a public address people can write to) before taking real sign-ups.</>],
           ["Rotate any secret that was pasted into a chat or committed anywhere", "Treat it as exposed."],
         ]}
       />

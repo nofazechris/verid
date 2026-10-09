@@ -83,6 +83,7 @@ pnpm dev`}</CodeBlock>
           [<Code key="7">VERID_VALIDATOR_PRIVATE_KEY</Code>, "For escrow", "Secret. A key registered as a validator on VeridValidation. Use a different key from the relayer so the roles can be revoked independently."],
           [<Code key="8">VERID_ESCROW_ADDRESS</Code>, "For escrow", "Deployed VeridEscrow."],
           [<Code key="8b">VERID_CONFIRMATION_TIMEOUT_MS</Code>, "Optional", "How long one chain transaction may wait for confirmation before the API answers pending. Default 20000. Keep it under your host’s request time limit (anchoring may wait for two transactions)."],
+          [<Code key="9b">NEXT_PUBLIC_CONTACT_EMAIL</Code>, "Recommended", "Public contact address shown on the Terms and Privacy pages. Compiled into the page code at build time."],
           [<Code key="9">NEXT_PUBLIC_ARC_EXPLORER_URL</Code>, "Optional", <>Base URL used to show “open in explorer” links (<Code key="t">/tx/&lt;hash&gt;</Code> is assumed). Verified on testnet: https://explorer.testnet.arc.io. For mainnet, confirm the scheme on a real transaction first.</>],
           [<Code key="10">NEXT_PUBLIC_FEATURED_PROOF_ID</Code>, "Optional", "The ID of a real receipt you choose to feature on the landing page as “Explore a proof”. Leave unset to show “Verify a receipt” instead."],
         ]}
