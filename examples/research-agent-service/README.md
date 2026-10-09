@@ -7,7 +7,7 @@ A real research agent. Give it a topic and it:
 3. writes a short brief that cites those sources: with **Claude** if `ANTHROPIC_API_KEY` is set (the model sees only
    the gathered sources), otherwise by quoting the sources.
 
-Every call is wrapped in `run.tool(...)` from `@verid/sdk`, so Verid records exactly what was asked and what came back.
+Every call is wrapped in `run.tool(...)` from `verid`, so Verid records exactly what was asked and what came back.
 When the function returns, **Verid's server** validates the result against the rules in `agent.mjs` (a "cited research
 brief"), and a passing run is anchored on Arc. The agent never decides whether it passed.
 
@@ -18,7 +18,7 @@ brief"), and a passing run is anchored on Arc. The agent never decides whether i
 curl -O https://YOUR-HOST/examples/research-agent/agent.mjs
 curl -O https://YOUR-HOST/examples/research-agent/server.mjs
 curl -O https://YOUR-HOST/examples/research-agent/package.json
-curl -O https://YOUR-HOST/sdk/verid-sdk.tgz && npm install ./verid-sdk.tgz   # download, then install the FILE
+npm install verid
 
 VERID_URL=https://YOUR-HOST VERID_API_KEY=verid_xxxxxxxx_... node server.mjs --once "solid state batteries"
 ```
@@ -47,8 +47,8 @@ curl -X POST http://localhost:8787/research \
 
 ## Deploy
 
-* **Any Node 18+ host:** copy the folder, `npm install ./verid-sdk.tgz`, `node server.mjs`.
-* **Docker:** `docker build --build-arg VERID_SDK_URL=https://YOUR-HOST/sdk/verid-sdk.tgz -t research-agent .`
+* **Any Node 18+ host:** copy the folder, `npm install`, `node server.mjs`.
+* **Docker:** `docker build -t research-agent .`
 * **Render:** `render.yaml` is included (not tested by the Verid project; any Node host works).
 
 Keep `VERID_API_KEY` and `ANTHROPIC_API_KEY` in your host's secret store, never in the repository. Each request does real

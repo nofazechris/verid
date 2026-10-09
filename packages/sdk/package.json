@@ -1,6 +1,6 @@
 {
-  "name": "@verid/sdk",
-  "version": "0.1.0",
+  "name": "verid",
+  "version": "0.1.1",
   "description": "Verid SDK: record an AI agent's work, have it validated, and anchor a verifiable receipt on Arc. Zero dependencies.",
   "license": "MIT",
   "type": "module",
@@ -22,15 +22,35 @@
   "engines": {
     "node": ">=18"
   },
-  "keywords": ["ai", "agents", "verification", "receipts", "arc", "provenance"],
+  "keywords": [
+    "ai",
+    "agents",
+    "verification",
+    "receipts",
+    "arc",
+    "provenance"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/node": "20.14.10",
     "typescript": "5.5.3",
     "vitest": "2.1.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nofazechris/verid.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://github.com/nofazechris/verid#readme",
+  "bugs": {
+    "url": "https://github.com/nofazechris/verid/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -69,7 +69,7 @@ await verid("POST", "/executions/" + id + "/evidence",
   { type: "tool_result", content: { status: response.status, items: body.items } });`;
 
 const LLM = `import Anthropic from "@anthropic-ai/sdk";
-import { Verid } from "@verid/sdk";
+import { Verid } from "verid";
 
 const verid = Verid.fromEnv();
 const claude = new Anthropic();
@@ -95,12 +95,12 @@ const out = await verid.run(
   },
 );`;
 
-const RESEARCH_RUN = `# Get the agent (three small files) and the SDK from your Verid server
+const RESEARCH_RUN = `# Get the agent (three small files) from your Verid server and install the SDK
 mkdir research-agent && cd research-agent
 curl -O https://YOUR-HOST/examples/research-agent/agent.mjs
 curl -O https://YOUR-HOST/examples/research-agent/server.mjs
 curl -O https://YOUR-HOST/examples/research-agent/package.json
-curl -O https://YOUR-HOST/sdk/verid-sdk.tgz && npm install ./verid-sdk.tgz
+npm install verid
 
 # Run it once on a real topic (Node 18+). Create the key in Settings → API Keys.
 VERID_URL=https://YOUR-HOST VERID_API_KEY=verid_xxxxxxxx_... node server.mjs --once "solid state batteries"`;
@@ -155,8 +155,8 @@ export default function Examples() {
         head={["WHERE", "HOW"]}
         cols="minmax(150px,0.7fr) minmax(0,2fr)"
         rows={[
-          ["Any Node 18+ host", <>Copy the folder, run <Code key="a">npm install ./verid-sdk.tgz</Code> then <Code key="b">node server.mjs</Code>, and set the environment variables below.</>],
-          ["Docker", <><Code key="a">docker build --build-arg VERID_SDK_URL=https://YOUR-HOST/sdk/verid-sdk.tgz -t research-agent .</Code> then <Code key="b">docker run -p 8787:8787 -e VERID_URL=… -e VERID_API_KEY=… research-agent</Code>. The folder includes a <Code key="c">Dockerfile</Code>.</>],
+          ["Any Node 18+ host", <>Copy the folder, run <Code key="a">npm install</Code> then <Code key="b">node server.mjs</Code>, and set the environment variables below.</>],
+          ["Docker", <><Code key="a">docker build -t research-agent .</Code> then <Code key="b">docker run -p 8787:8787 -e VERID_URL=… -e VERID_API_KEY=… research-agent</Code>. The folder includes a <Code key="c">Dockerfile</Code>.</>],
           ["Render, Railway, Fly…", <>The folder includes a <Code key="a">render.yaml</Code>. Any host that runs Node works; these hosts were not tested by the Verid project.</>],
         ]}
       />

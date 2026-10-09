@@ -3,7 +3,7 @@ Verid Python SDK. One file, standard library only (Python 3.8+).
 
 Record what an AI agent does, have the result validated on a server, and publish a verifiable receipt on Arc.
 
-    # curl -O https://YOUR-HOST/sdk/verid.py
+    # pip install verid
     from verid import Verid
 
     verid = Verid.from_env()            # VERID_API_KEY + VERID_URL
@@ -41,7 +41,7 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 __all__ = ["Verid", "VeridError", "VeridNetworkError", "RunOutcome"]
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 _RETRY = {429, 502, 503, 504}
 _KEY_RE = re.compile(r"^verid_[A-Za-z0-9_-]{8}_[A-Za-z0-9_-]{43}$")

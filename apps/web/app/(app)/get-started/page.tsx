@@ -62,12 +62,12 @@ export default function GetStarted() {
     toast("Copied");
   };
 
-  const researchCmd = `# 1. Get the agent (three small files) and the SDK from this server
+  const researchCmd = `# 1. Get the agent (three small files) from this server and install the SDK
 mkdir research-agent && cd research-agent
 curl -O ${origin}/examples/research-agent/agent.mjs
 curl -O ${origin}/examples/research-agent/server.mjs
 curl -O ${origin}/examples/research-agent/package.json
-curl -O ${origin}/sdk/verid-sdk.tgz && npm install ./verid-sdk.tgz
+npm install verid
 
 # 2. Run it once on a real topic (needs Node 18+)
 VERID_URL=${origin} VERID_API_KEY=<your key> node server.mjs --once "solid state batteries"`;

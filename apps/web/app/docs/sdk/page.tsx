@@ -1,13 +1,11 @@
 import { A } from "@/components/ui";
 import { Callout, Code, CodeBlock, H1, H2, H3, P, Table, UL } from "@/components/docs";
 
-const INSTALL_NODE = `# Your Verid server hosts the SDK, so there is nothing to sign up for.
-curl -O https://YOUR-HOST/sdk/verid-sdk.tgz
-npm install ./verid-sdk.tgz`;
+const INSTALL_NODE = `npm install verid`;
 
-const INSTALL_PY = `curl -O https://YOUR-HOST/sdk/verid.py      # one file, standard library only, Python 3.8+`;
+const INSTALL_PY = `pip install verid      # one file, standard library only, Python 3.8+`;
 
-const RUN_NODE = `import { Verid } from "@verid/sdk";
+const RUN_NODE = `import { Verid } from "verid";
 
 const verid = new Verid({ apiKey: process.env.VERID_API_KEY, baseUrl: "https://YOUR-HOST" });
 // or: const verid = Verid.fromEnv();   // reads VERID_API_KEY and VERID_URL
@@ -82,12 +80,12 @@ export default function Sdk() {
         head={["PACKAGE", "FOR", "INSTALL"]}
         cols="minmax(130px,0.7fr) minmax(0,1fr) minmax(0,2fr)"
         rows={[
-          [<Code key="1">@verid/sdk</Code>, "Node 18+, browsers' fetch, edge runtimes (TypeScript types included)", <Code key="a">npm install ./verid-sdk.tgz</Code>],
-          [<Code key="2">verid.py</Code>, "Python 3.8+ (one file, standard library only)", <Code key="b">curl -O https://YOUR-HOST/sdk/verid.py</Code>],
+          [<Code key="1">verid</Code>, "Node 18+, browsers' fetch, edge runtimes (TypeScript types included)", <Code key="a">npm install verid</Code>],
+          [<Code key="2">verid</Code>, "Python 3.8+ (one file, standard library only)", <Code key="b">pip install verid</Code>],
         ]}
       />
-      <Callout title="NOT ON NPM OR PYPI YET">
-        Your own Verid server hosts both, so no account anywhere is needed. Download, then install the <i>file</i> (installing straight from a URL is blocked by some npm configurations, which is why the commands download first). Publishing to npm and PyPI is a later step; the package is already built to be published.
+      <Callout title="OFFLINE OR PRIVATE INSTALL">
+        Every Verid server also serves the exact same SDK as files, for networks that cannot reach npm or PyPI: <Code>curl -O https://YOUR-HOST/sdk/verid-sdk.tgz</Code> then <Code>npm install ./verid-sdk.tgz</Code> (download first; some npm configurations block installing straight from a URL), and <Code>curl -O https://YOUR-HOST/sdk/verid.py</Code> for Python.
       </Callout>
 
       <H2>Install</H2>

@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "verid"
+version = "0.1.1"
+description = "Verid SDK: record an AI agent's work, have it validated on a server, and publish a verifiable receipt on Arc. One file, standard library only."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+keywords = ["ai", "agents", "verification", "receipts", "arc", "provenance"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/nofazechris/verid"
+Source = "https://github.com/nofazechris/verid/tree/main/packages/sdk-python"
+Issues = "https://github.com/nofazechris/verid/issues"
+
+[tool.setuptools]
+py-modules = ["verid"]

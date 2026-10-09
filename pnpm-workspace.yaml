@@ -2,3 +2,6 @@ packages:
   - "apps/*"
   - "packages/*"
   - "examples/*"
+  # A standalone service people copy out and install on its own (it depends on the published `verid` package), so it
+  # must not be part of this workspace.
+  - "!examples/research-agent-service"

@@ -3,12 +3,11 @@ import { Callout, Code, CodeBlock, H1, H2, H3, OL, P, Table, UL } from "@/compon
 
 const B = ({ children }: { children: React.ReactNode }) => <b style={{ color: "#E8ECE9", fontWeight: 500 }}>{children}</b>;
 
-const INSTALL = `# one-time, from your Verid server (the SDK is a single dependency-free package)
-curl -O https://YOUR-VERID-HOST/sdk/verid-sdk.tgz
-npm install ./verid-sdk.tgz`;
+const INSTALL = `npm install verid        # TypeScript / JavaScript
+pip install verid        # Python (one file, no dependencies)`;
 
 const AGENT = `// agent.ts: YOUR agent. Verid is not in charge of running this; it only receives reports.
-import { Verid } from "@verid/sdk";
+import { Verid } from "verid";
 
 const verid = Verid.fromEnv();   // reads VERID_URL and VERID_API_KEY from the environment
 
@@ -44,7 +43,7 @@ export async function findStartups(topic: string, minimum = 5) {
   return { startups: out.result, proof: out.anchored ? out.proofUrl : null };
 }`;
 
-const PY = `# agent.py: the same thing in Python (curl -O https://YOUR-VERID-HOST/sdk/verid.py)
+const PY = `# agent.py: the same thing in Python (pip install verid)
 from verid import Verid
 verid = Verid.from_env()
 

@@ -12,7 +12,7 @@
  * function returns, Verid's SERVER validates the result against the rules below, and a passing run is anchored on
  * Arc. The agent never decides whether it passed.
  */
-import { Verid } from "@verid/sdk";
+import { Verid } from "verid";
 
 const UA = "verid-research-agent/0.1 (https://github.com/; contact: example)";
 

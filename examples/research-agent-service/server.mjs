@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * The research agent as a small deployable web service (plus a one-shot CLI mode). No framework, no dependencies
- * except @verid/sdk.
+ * except verid.
  *
  *   node server.mjs                       start the service on $PORT (default 8787); open it in a browser
  *   node server.mjs --once "solid state batteries"     research one topic from the terminal and exit

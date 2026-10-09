@@ -16,10 +16,10 @@ const EXAMPLE_RULES = `[
 
 export function connectSnippets(origin: string, slug = "my-agent"): Snippets {
   const install = {
-    node: `curl -O ${origin}/sdk/verid-sdk.tgz\nnpm install ./verid-sdk.tgz`,
-    python: `curl -O ${origin}/sdk/verid.py        # one file, no dependencies`,
+    node: `npm install verid`,
+    python: `pip install verid        # one file, no dependencies`,
   };
-  const node = `import { Verid } from "@verid/sdk";
+  const node = `import { Verid } from "verid";
 
 const verid = new Verid({ apiKey: process.env.VERID_API_KEY, baseUrl: "${origin}" });
 

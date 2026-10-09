@@ -5,12 +5,10 @@ services:
     name: verid-research-agent
     runtime: node
     plan: free
-    buildCommand: curl -fsSL -o verid-sdk.tgz $VERID_SDK_URL && npm install --omit=dev ./verid-sdk.tgz
+    buildCommand: npm install --omit=dev
     startCommand: node server.mjs
     healthCheckPath: /health
     envVars:
-      - key: VERID_SDK_URL        # https://YOUR-VERID-HOST/sdk/verid-sdk.tgz
-        sync: false
       - key: VERID_URL            # https://YOUR-VERID-HOST
         sync: false
       - key: VERID_API_KEY
